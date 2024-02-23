@@ -12,5 +12,6 @@
   "author": "",
   "license": "ISC",
   "description": "Bước 1: Cài đặt các package: npm install\r Bước 2: Chạy Json server: npm start",
-  "devDependencies": {}
+  "devDependencies": {}                                                             
 }
+                                                          

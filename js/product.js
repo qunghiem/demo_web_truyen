@@ -1,73 +1,31 @@
-import { drawProduct } from "./drawProduct.js";
-import { params, pagiPrev, pagiNumber, pagiNext, buttonSearch, inputSearch, filter } from "./variables.js";
+import { fetchApi } from "./fetchApi.js";
 
-// Gọi hàm vẽ item
-drawProduct();
-// Hết Gọi hàm vẽ item
-
-// Phân trang
-const paginate = (page = 1) => {
-  params.page = `${page}`;
-  pagiNumber.innerHTML = page;
-  drawProduct();
-};
-
-pagiPrev.addEventListener("click", function () {
-  if (parseInt(params.page) > 1) {
-    paginate(parseInt(params.page) - 1);
-  }
-});
-
-pagiNext.addEventListener("click", function () {
-  paginate(parseInt(params.page) + 1);
-});
-// Hết Phân trang
-
-// Tìm kiếm sản phẩm
-const search = () => {
-  let value = inputSearch.value;
-  if (value != "") {
-    params.q = `${value}`;
-    drawProduct();
-  } else {
-    params.q = ``;
-    drawProduct();
-  }
-};
-
-buttonSearch.addEventListener("click", function () {
-  search();
-});
-
-inputSearch.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    search();
-  }
-});
-// Hết Tìm kiếm sản phẩm
-
-// Filter
-filter.addEventListener("change", function (e) {
-  switch (e.target.value) {
-    case "mac-dinh":
-      params.sort = ``;
-      params.order = ``;
-      break;
-    case "gia-thap-den-cao":
-      params.sort = `price`;
-      params.order = `asc`;
-      break;
-    case "gia-cao-den-thap":
-      params.sort = `price`;
-      params.order = `desc`;
-      break;
-    case "giam-gia-nhieu":
-      params.sort = `discountPercentage`;
-      params.order = `desc`;
-      break;
-    default:
-      break;
-  }
-  drawProduct();
-});
-// End Filter
+const listNovel = document.querySelector("#list__Novel");
+fetchApi("http://localhost:3000/listNovel")
+  .then(data => {
+    let htmls = data.map(item => {
+      // console.log(item);
+      return `
+      <div class="novel__item">
+        <iframe class="novel__image" scrolling="no" src="${item.descriptionImage}" width="176px" height="270" allow="autoplay" title="${item.novelName} overflow="hidden""></iframe>
+        <div class="novel__title">
+          <a><h3 id="h3">${item.novelName}</h3></a>
+        </div>
+        <div class="novel__content">
+          <div class="novel__author">
+            <h4>Tác giả: <a>${item.authorName}</a></h4>
+          </div>
+            <div class="view">
+              <p>Luợt xem: <span>${item.view}</span></p>
+            </div>                                                            
+            <div class="status">
+              <p>Trạng thái: <span>${item.status}</span></p>
+            </div>
+    
+        </div>
+      </div>
+      `;
+    })
+    listNovel.innerHTML = htmls.join("");
+    console.log(htmls.join(""));
+  })                                                                               
